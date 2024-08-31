@@ -15,21 +15,25 @@ class ImageSorterApp:
         # Google-like Styling
         style = ttk.Style()
         style.theme_use('clam')
-        bleu_google = "#4285F4"
-        gris_clair = "#F5F5F5"
-        blanc = "#FFFFFF"
-        style.configure("TLabel", background=gris_clair, foreground="black", 
-                        padding=10, font=("Roboto", 14))
-        style.configure("TButton", background=bleu_google, foreground=blanc, 
-                        padding=10, font=("Roboto", 12, "bold"))
-        style.configure("TMenubutton", background=bleu_google, foreground=blanc, 
-                        padding=5, font=("Roboto", 12))
-        title_font = tkFont.Font(family="Product Sans", size=20, weight="bold")
+        self.bleu_google = "#4285F4"
+        self.gris_clair = "#F5F5F5"
+        self.blanc = "#FFFFFF"
+        self.noir = "#000000"
+        self.configure_styles()
 
         # Title
+        title_font = tkFont.Font(family="Roboto", size=24, weight="bold")  # Define title_font here
         self.title_label = ttk.Label(master, text="Stephydlb", font=title_font)
         self.title_label.pack(pady=(20, 10))
 
+        # Dark Mode Switch Button
+        self.dark_mode_button = ttk.Button(master, text="Mode Sombre", command=self.toggle_dark_mode)
+        self.dark_mode_button.pack(pady=(10, 0))
+
+         # Dark Mode Switch
+        self.dark_mode = False
+        self.toggle_dark_mode()
+        
         # Folder Selection
         self.label = ttk.Label(master, text="Choisissez un dossier contenant des images:")
         self.label.pack(pady=10)
@@ -57,9 +61,34 @@ class ImageSorterApp:
 
         # Button Hover Effects
         self.select_button.bind("<Enter>", lambda e: self.select_button.config(background="#357AE8"))
-        self.select_button.bind("<Leave>", lambda e: self.select_button.config(background=bleu_google))
+        self.select_button.bind("<Leave>", lambda e: self.select_button.config(background=self.bleu_google))
         self.sort_button.bind("<Enter>", lambda e: self.sort_button.config(background="#357AE8"))
-        self.sort_button.bind("<Leave>", lambda e: self.sort_button.config(background=bleu_google))
+        self.sort_button.bind("<Leave>", lambda e: self.sort_button.config(background=self.bleu_google))
+
+    def toggle_dark_mode(self):
+        self.dark_mode = not self.dark_mode
+        if self.dark_mode:
+            self.bleu_google = "#357AE8"
+            self.gris_clair = "#333333"
+            self.blanc = "#FFFFFF"
+            self.noir = "#000000"
+            self.dark_mode_button.config(text="Mode Clair")
+        else:
+            self.bleu_google = "#4285F4"
+            self.gris_clair = "#F5F5F5"
+            self.blanc = "#FFFFFF"
+            self.noir = "#000000"
+            self.dark_mode_button.config(text="Mode Sombre")
+        self.configure_styles()
+
+    def configure_styles(self):
+        style = ttk.Style()
+        style.configure("TLabel", background=self.gris_clair, foreground=self.noir, 
+                        padding=10, font=("Roboto", 14))
+        style.configure("TButton", background=self.bleu_google, foreground=self.blanc, 
+                        padding=10, font=("Roboto", 12, "bold"))
+        style.configure("TMenubutton", background=self.bleu_google, foreground=self.blanc, 
+                        padding=5, font=("Roboto", 12))
 
     def select_folder(self):
         self.folder_path = filedialog.askdirectory()
@@ -101,4 +130,3 @@ if __name__ == "__main__":
     root = Tk()
     app = ImageSorterApp(root)
     root.mainloop()
-
